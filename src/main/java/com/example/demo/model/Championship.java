@@ -16,6 +16,11 @@ import java.util.Map;
 @NoArgsConstructor
 public class Championship {
 
+    public Championship(String name, int seasonNumber) {
+        this.name = name;
+        this.seasonNumber = seasonNumber;
+    }
+
     private String name;
 
     private List<Team> teams;

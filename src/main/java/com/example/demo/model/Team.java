@@ -13,6 +13,10 @@ import lombok.experimental.Accessors;
 @NoArgsConstructor
 public class Team {
 
+    public Team(String name) {
+        this.name = name;
+    }
+
     private String name;
 
 }
