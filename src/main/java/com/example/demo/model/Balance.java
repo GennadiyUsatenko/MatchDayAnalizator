@@ -1,28 +1,20 @@
 package com.example.demo.model;
 
+import com.example.demo.model.enums.StrategyType;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
-import java.util.List;
-import java.util.Map;
-
 @Getter
 @Setter
 @Accessors(chain = true)
 @ToString(callSuper = true)
 @NoArgsConstructor
-public class MatchDay {
+public class Balance {
 
-    private List<Match> matches;
+    private Double balance = 0d;
 
-    private int matchDayNumber;
-
-    private boolean isInFuture;
-
-    public Map<Team, TableStatistics> getResult() {
-        return null;
-    }
+    private StrategyType strategyType = StrategyType.STANDART;
 }

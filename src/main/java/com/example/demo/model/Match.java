@@ -22,6 +22,8 @@ public class Match {
 
     private boolean isScored;
 
+    private boolean isPotentiallyScored;
+
     private boolean isInFuture;
 
     public Map<Team, TableStatistics> getResult() {

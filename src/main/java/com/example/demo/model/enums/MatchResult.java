@@ -15,6 +15,8 @@ public enum MatchResult {
                 return DRAW;
             case -1:
                 return LOSE;
+            default:
+                return null;
         }
     }
 }

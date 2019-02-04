@@ -22,9 +22,9 @@ public class Championship {
 
     private List<MatchDay> matchDays;
 
-    private int seassonNumber;
+    private int seasonNumber;
 
     public Map<Team, TableStatistics> getTable() {
-        matchDays.stream()
+        return null;
     }
 }
