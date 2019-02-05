@@ -1,5 +1,7 @@
 package com.example.demo.controller;
 
+import com.example.demo.service.MainService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +17,9 @@ import java.awt.*;
 @RestController
 public class MainController {
 
+    @Autowired
+    private MainService mainService;
+
     @GetMapping(value = "/status", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<String> status() {
         return new ResponseEntity<String>("ok", HttpStatus.OK);
@@ -22,6 +27,7 @@ public class MainController {
 
     @GetMapping("/start")
     public ModelAndView start() {
+        mainService.parseEPL();
         ModelAndView modelAndView = new ModelAndView("start");
         return modelAndView;
     }

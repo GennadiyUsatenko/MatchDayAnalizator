@@ -29,6 +29,10 @@ public class Championship {
 
     private int seasonNumber;
 
+    public Team findTeamByName(String teamName) {
+        return teams.stream().filter(t -> t.getName().equals(teamName)).findFirst().orElse(null);
+    }
+
     public Map<Team, TableStatistics> getTable() {
         return null;
     }

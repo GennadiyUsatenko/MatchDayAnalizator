@@ -16,6 +16,21 @@ import java.util.Map;
 @NoArgsConstructor
 public class MatchDay {
 
+    public MatchDay(List<Match> matches) {
+        this.matches = matches;
+    }
+
+    public MatchDay(List<Match> matches, int matchDayNumber) {
+        this.matches = matches;
+        this.matchDayNumber = matchDayNumber;
+    }
+
+    public MatchDay(List<Match> matches, int matchDayNumber, boolean isInFuture) {
+        this.matches = matches;
+        this.matchDayNumber = matchDayNumber;
+        this.isInFuture = isInFuture;
+    }
+
     private List<Match> matches;
 
     private int matchDayNumber;
