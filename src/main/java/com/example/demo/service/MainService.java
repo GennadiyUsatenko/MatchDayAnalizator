@@ -50,7 +50,7 @@ public class MainService {
                     return new MatchDay(matches, matchDayNumbers.next(), matches.stream().allMatch(Match::isInFuture));
                 }).collect(Collectors.toList());
 
-                return epl.setMatchDays(matchDays);
+                epl.addToMatchDays(matchDays);
             }
         }
         return epl;

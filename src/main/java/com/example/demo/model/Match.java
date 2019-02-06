@@ -6,8 +6,7 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @Getter
 @Setter
@@ -37,17 +36,7 @@ public class Match {
 
     private boolean isInFuture;
 
-    public Map<Team, TableStatistics> getTable() {
-        Map<Team, TableStatistics> result = new HashMap<Team, TableStatistics>(2);
-        result.put(homeSide.getTeam(), new TableStatistics());
-        result.put(guestSide.getTeam(), new TableStatistics());
-
-        if (isInFuture) {
-            return result;
-        } else {
-            result.put(homeSide.getTeam(), new TableStatistics(this, true));
-            result.put(guestSide.getTeam(), new TableStatistics(this, false));
-            return result;
-        }
+    public List<TableStatistics> getTableStatList() {
+        return new ArrayList<>(Arrays.asList(new TableStatistics(this, true), new TableStatistics(this, false)));
     }
 }

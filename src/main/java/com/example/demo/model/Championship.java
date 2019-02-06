@@ -6,8 +6,8 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -29,11 +29,24 @@ public class Championship {
 
     private int seasonNumber;
 
+    public Championship addToMatchDays(List<MatchDay> matchDays) {
+        this.matchDays = Optional.ofNullable(this.matchDays).orElse(new ArrayList<>());
+        this.matchDays.addAll(matchDays);
+        this.matchDays = this.matchDays.stream().sorted(Comparator.comparingInt(m -> m.getMatchDayNumber())).collect(Collectors.toList());
+        return this;
+    }
+
     public Team findTeamByName(String teamName) {
         return teams.stream().filter(t -> t.getName().equals(teamName)).findFirst().orElse(null);
     }
 
-    public Map<Team, TableStatistics> getTable() {
-        return null;
+    public List<TableStatistics> getTableStatList() {
+        List<MatchDayResult> matchDayResults = matchDays.stream().map(MatchDay::getMatchDayResult).collect(Collectors.toList());
+        return matchDayResults.get(0).addAll(matchDayResults.stream().skip(1).collect(Collectors.toList())).getTableStatistics();
+    }
+
+    public List<TableStatistics> getTableStatList(int matchDayLimit) {
+        List<MatchDayResult> matchDayResults = matchDays.stream().limit(matchDayLimit).map(MatchDay::getMatchDayResult).collect(Collectors.toList());
+        return matchDayResults.get(0).addAll(matchDayResults.stream().skip(1).collect(Collectors.toList())).getTableStatistics();
     }
 }

@@ -27,8 +27,8 @@ public class MainController {
 
     @GetMapping("/start")
     public ModelAndView start() {
-        mainService.parseEPL();
         ModelAndView modelAndView = new ModelAndView("start");
+        modelAndView.addObject("epl", mainService.parseEPL());
         return modelAndView;
     }
 }

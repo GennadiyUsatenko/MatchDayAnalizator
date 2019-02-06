@@ -28,8 +28,18 @@ public class MatchDayResult {
 
     private List<TableStatistics> tableStatistics;
 
+    public TableStatistics findTableStatByTeam(Team team) {
+        return tableStatistics.stream().filter(t -> t.getTeam().equals(team)).findFirst().orElse(null);
+    }
+
     public MatchDayResult add(MatchDayResult matchDayResult) {
-        return null;
+        tableStatistics.stream().peek(t -> t.add(matchDayResult.findTableStatByTeam(t.getTeam())));
+        return this;
+    }
+
+    public MatchDayResult addAll(List<MatchDayResult> matchDayResults) {
+        matchDayResults.forEach(this::add);
+        return this;
     }
 
 }

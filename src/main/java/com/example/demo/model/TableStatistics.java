@@ -17,31 +17,36 @@ import static com.example.demo.model.enums.MatchResult.WIN;
 public class TableStatistics {
 
     public TableStatistics(Match match, boolean isForHomeSide) {
-        switch (MatchResult.getResult(match, isForHomeSide)) {
-            case WIN:
-                matchesWon = 1;
-                matchesScored = match.isScored() ? 1 : 0;
-                points = 3;
-                goalsFor = isForHomeSide ? match.getHomeSide().getGoals() : match.getGuestSide().getGoals();
-                goalsAgainst = isForHomeSide ? match.getGuestSide().getGoals() : match.getHomeSide().getGoals();
-                break;
-            case DRAW:
-                matchesDrawn = 1;
-                matchesScored = match.isScored() ? 1 : 0;
-                points = 1;
-                goalsFor = isForHomeSide ? match.getHomeSide().getGoals() : match.getGuestSide().getGoals();
-                goalsAgainst = isForHomeSide ? match.getGuestSide().getGoals() : match.getHomeSide().getGoals();
-                break;
-            case LOSE:
-                matchesLost = 1;
-                matchesScored = match.isScored() ? 1 : 0;
-                goalsFor = isForHomeSide ? match.getHomeSide().getGoals() : match.getGuestSide().getGoals();
-                goalsAgainst = isForHomeSide ? match.getGuestSide().getGoals() : match.getHomeSide().getGoals();
-                break;
+        if (!match.isInFuture()) {
+            switch (MatchResult.getResult(match, isForHomeSide)) {
+                case WIN:
+                    matchesWon = 1;
+                    matchesScored = match.isScored() ? 1 : 0;
+                    points = 3;
+                    goalsFor = isForHomeSide ? match.getHomeSide().getGoals() : match.getGuestSide().getGoals();
+                    goalsAgainst = isForHomeSide ? match.getGuestSide().getGoals() : match.getHomeSide().getGoals();
+                    break;
+                case DRAW:
+                    matchesDrawn = 1;
+                    matchesScored = match.isScored() ? 1 : 0;
+                    points = 1;
+                    goalsFor = isForHomeSide ? match.getHomeSide().getGoals() : match.getGuestSide().getGoals();
+                    goalsAgainst = isForHomeSide ? match.getGuestSide().getGoals() : match.getHomeSide().getGoals();
+                    break;
+                case LOSE:
+                    matchesLost = 1;
+                    matchesScored = match.isScored() ? 1 : 0;
+                    goalsFor = isForHomeSide ? match.getHomeSide().getGoals() : match.getGuestSide().getGoals();
+                    goalsAgainst = isForHomeSide ? match.getGuestSide().getGoals() : match.getHomeSide().getGoals();
+                    break;
+            }
+            matchesPlayed = 1;
+            goalsDifference = goalsFor - goalsAgainst;
         }
-        matchesPlayed = 1;
-        goalsDifference = goalsFor - goalsAgainst;
+        team = isForHomeSide ? match.getHomeSide().getTeam() : match.getGuestSide().getTeam();
     }
+
+    private Team team;
 
     private int matchesPlayed;
 
