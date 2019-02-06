@@ -37,7 +37,7 @@ public class Match {
 
     private boolean isInFuture;
 
-    public Map<Team, TableStatistics> getResult() {
+    public Map<Team, TableStatistics> getTable() {
         Map<Team, TableStatistics> result = new HashMap<Team, TableStatistics>(2);
         result.put(homeSide.getTeam(), new TableStatistics());
         result.put(guestSide.getTeam(), new TableStatistics());

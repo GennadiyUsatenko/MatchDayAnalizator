@@ -6,8 +6,10 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -37,7 +39,7 @@ public class MatchDay {
 
     private boolean isInFuture;
 
-    public Map<Team, TableStatistics> getResult() {
-        return null;
+    public List<Map<Team, TableStatistics>> getTable() {
+        return matches.stream().map(Match::getTable).collect(Collectors.toList());
     }
 }

@@ -60,4 +60,17 @@ public class TableStatistics {
     private int goalsAgainst;
 
     private int goalsDifference;
+
+    public TableStatistics add(TableStatistics tableStatistics) {
+        this.matchesPlayed += tableStatistics.getMatchesPlayed();
+        this.matchesWon += tableStatistics.getMatchesWon();
+        this.matchesDrawn += tableStatistics.getMatchesDrawn();
+        this.matchesLost += tableStatistics.getMatchesLost();
+        this.matchesScored += tableStatistics.getMatchesScored();
+        this.points += tableStatistics.getPoints();
+        this.goalsFor += tableStatistics.getGoalsFor();
+        this.goalsAgainst += tableStatistics.getGoalsAgainst();
+        this.goalsDifference += tableStatistics.getGoalsDifference();
+        return this;
+    }
 }

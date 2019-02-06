@@ -19,4 +19,13 @@ public class Team {
 
     private String name;
 
+    @Override
+    public int hashCode() {
+        return name.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj.getClass().equals(Team.class) && name.equals(((Team) obj).getName());
+    }
 }

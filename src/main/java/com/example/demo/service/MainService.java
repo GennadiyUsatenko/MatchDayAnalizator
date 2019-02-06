@@ -7,8 +7,7 @@ import org.jsoup.nodes.Document;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.IntSummaryStatistics;
+import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -33,7 +32,7 @@ public class MainService {
             if (month == 6 || month == 7) continue;
             document = jsoupConnect(String.format(EPL_CALENDAR_LINK, sprotsRuSeson, month));
             if (document != null) {
-                List<Integer> matchDayNumbers = document.select("h3.titleH3").stream().filter(e -> e.text().contains("тур")).map(e -> Integer.parseInt(e.text().replaceAll("\\D", ""))).collect(Collectors.toList());
+                Iterator<Integer> matchDayNumbers = document.select("h3.titleH3").stream().filter(e -> e.text().contains("тур")).map(e -> Integer.parseInt(e.text().replaceAll("\\D", ""))).collect(Collectors.toList()).iterator();
                 List<MatchDay> matchDays = document.select("table.stat-table tbody").stream().map(matchDay -> {
                     List<Match> matches = matchDay.select("tr").stream().map(match -> {
                         Team homeTeam = epl.findTeamByName(match.select("td.owner-td").text());
@@ -48,10 +47,10 @@ public class MainService {
                         }
                     }).collect(Collectors.toList());
 
-                    // add matchday number
-                    return new MatchDay(matches);
+                    return new MatchDay(matches, matchDayNumbers.next(), matches.stream().allMatch(Match::isInFuture));
                 }).collect(Collectors.toList());
 
+                return epl.setMatchDays(matchDays);
             }
         }
         return epl;
