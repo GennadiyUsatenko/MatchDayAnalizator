@@ -6,7 +6,9 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -33,12 +35,13 @@ public class MatchDayResult {
     }
 
     public MatchDayResult add(MatchDayResult matchDayResult) {
-        tableStatistics.stream().peek(t -> t.add(matchDayResult.findTableStatByTeam(t.getTeam())));
+        tableStatistics.forEach(t -> t.add(matchDayResult.findTableStatByTeam(t.getTeam())));
         return this;
     }
 
     public MatchDayResult addAll(List<MatchDayResult> matchDayResults) {
         matchDayResults.forEach(this::add);
+        tableStatistics = tableStatistics.stream().sorted(Comparator.comparingInt(t -> ((TableStatistics) t).getPoints()).reversed()).collect(Collectors.toList());
         return this;
     }
 

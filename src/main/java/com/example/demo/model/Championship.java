@@ -29,8 +29,14 @@ public class Championship {
 
     private int seasonNumber;
 
+    private List<List<TableStatistics>> tableStatistics;
+
     public Championship addToMatchDays(List<MatchDay> matchDays) {
         this.matchDays = Optional.ofNullable(this.matchDays).orElse(new ArrayList<>());
+        if (this.matchDays.stream().anyMatch(matchDay -> matchDay.getMatchDayNumber() == matchDays.get(0).getMatchDayNumber())) {
+            this.matchDays.stream().filter(matchDay -> matchDay.getMatchDayNumber() == matchDays.get(0).getMatchDayNumber()).findFirst().get().getMatches().addAll(matchDays.get(0).getMatches());
+            matchDays.remove(0);
+        }
         this.matchDays.addAll(matchDays);
         this.matchDays = this.matchDays.stream().sorted(Comparator.comparingInt(m -> m.getMatchDayNumber())).collect(Collectors.toList());
         return this;
@@ -38,6 +44,24 @@ public class Championship {
 
     public Team findTeamByName(String teamName) {
         return teams.stream().filter(t -> t.getName().equals(teamName)).findFirst().orElse(null);
+    }
+
+    public Championship setTableStatList() {
+        List<List<TableStatistics>> lists = new ArrayList<>(matchDays.size());
+        for (int matchDayNamber = 1; matchDayNamber <= matchDays.size(); matchDayNamber++) {
+            lists.add(getTableStatList(matchDayNamber));
+        }
+        tableStatistics = lists;
+        return this;
+    }
+
+    public Championship setTableStatList(int matchDayLimit) {
+        List<List<TableStatistics>> lists = new ArrayList<>(matchDayLimit);
+        for (int matchDayNamber = 1; matchDayNamber <= matchDayLimit; matchDayNamber++) {
+            lists.add(getTableStatList(matchDayNamber));
+        }
+        tableStatistics = lists;
+        return this;
     }
 
     public List<TableStatistics> getTableStatList() {

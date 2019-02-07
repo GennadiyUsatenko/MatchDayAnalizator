@@ -53,7 +53,7 @@ public class MainService {
                 epl.addToMatchDays(matchDays);
             }
         }
-        return epl;
+        return epl.setTableStatList();
     }
 
     private Document jsoupConnect(String url) {

@@ -8,22 +8,10 @@
 
 </head>
 <body>
-<th:block th:each="matchDay, iter : ${epl.matchDays}">
+<th:block th:each="matchDay, matchDayIter : ${epl.matchDays}">
     <hr style="border: 10px solid green;"/>
     <h3 class="text-primary text-center" th:text="'Match Day # ' + ${matchDay.matchDayNumber}"></h3>
     <div class="row">
-        <div class="col-md-4">
-            <table class="table">
-                <thead>
-                <tr>
-                    <th scope="col">Home</th>
-                    <th scope="col">Score</th>
-                    <th scope="col">Guest</th>
-                </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
-        </div>
         <div class="col-md-6">
             <table class="table table-dark">
                 <thead>
@@ -31,17 +19,49 @@
                     <th scope="col">#</th>
                     <th scope="col">Club</th>
                     <th scope="col">Played</th>
-                    <th scope="col">Won</th>
-                    <th scope="col">Drawn</th>
-                    <th scope="col">Lost</th>
+                    <!--<th scope="col">Won</th>-->
+                    <!--<th scope="col">Drawn</th>-->
+                    <!--<th scope="col">Lost</th>-->
                     <th scope="col">GF</th>
                     <th scope="col">GA</th>
-                    <th scope="col">GD</th>
+                    <!--<th scope="col">GD</th>-->
                     <th scope="col">Points</th>
                     <th scope="col">TS</th>
                 </tr>
                 </thead>
-                <tbody></tbody>
+                <tbody>
+                <th:block th:each="stat, statIter : ${epl.tableStatistics[matchDayIter.index]}">
+                    <tr>
+                        <td th:text="${statIter.count}"></td>
+                        <th scope="row" th:text="${stat.team.name}"></th>
+                        <td th:text="${stat.matchesPlayed}"></td>
+                        <td th:text="${stat.goalsFor}"></td>
+                        <td th:text="${stat.goalsAgainst}"></td>
+                        <td th:text="${stat.points}"></td>
+                        <td th:text="${stat.matchesScored}"></td>
+                    </tr>
+                </th:block>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-4">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col" style="width: 40%">Home</th>
+                    <th scope="col" style="width: 20%">Score</th>
+                    <th scope="col" style="width: 40%">Guest</th>
+                </tr>
+                </thead>
+                <tbody>
+                    <th:block th:each="match, matchiter : ${matchDay.matches}">
+                        <tr>
+                            <td th:text="${match.homeSide.team.name}"></td>
+                            <th scope="row" th:text="${match.homeSide.goals} + ':' + ${match.guestSide.goals}"></th>
+                            <td th:text="${match.guestSide.team.name}"></td>
+                        </tr>
+                    </th:block>
+                </tbody>
             </table>
         </div>
         <div class="col-md-2">
