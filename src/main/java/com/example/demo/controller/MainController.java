@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -25,10 +26,10 @@ public class MainController {
         return new ResponseEntity<String>("ok", HttpStatus.OK);
     }
 
-    @GetMapping("/start")
-    public ModelAndView start() {
-        ModelAndView modelAndView = new ModelAndView("start");
-        modelAndView.addObject("epl", mainService.parseEPL());
+    @GetMapping("/index/{countryName}/{seasonNumber}")
+    public ModelAndView start(@PathVariable("countryName") String countryName, @PathVariable("seasonNumber") Integer seasonNumber) {
+        ModelAndView modelAndView = new ModelAndView("index");
+        modelAndView.addObject("epl", mainService.parseChampionship(countryName, seasonNumber));
         return modelAndView;
     }
 }

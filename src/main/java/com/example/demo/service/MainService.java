@@ -20,8 +20,8 @@ public class MainService {
     private static final String EPL_TABLE_LINK = "https://www.sports.ru/epl/table/";
     private static final String EPL_CALENDAR_LINK = "https://www.sports.ru/epl/calendar/?s=%s&m=%s";
 
-    public Championship parseEPL() {
-        Championship epl = new Championship("EPL", 2018);
+    public Championship parseChampionship(String countryName, Integer seasonNumber) {
+        Championship epl = new Championship(countryName, 2018);
         int sprotsRuSeson = 6881;
 
         Document document = jsoupConnect(EPL_TABLE_LINK);
