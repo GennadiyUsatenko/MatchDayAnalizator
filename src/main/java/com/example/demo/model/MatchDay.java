@@ -43,4 +43,5 @@ public class MatchDay {
     public MatchDayResult getMatchDayResult() {
         return new MatchDayResult(this, matches.stream().map(Match::getTableStatList).flatMap(List::stream).collect(Collectors.toList()));
     }
+
 }

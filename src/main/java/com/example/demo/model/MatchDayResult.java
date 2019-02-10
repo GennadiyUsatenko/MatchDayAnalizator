@@ -39,9 +39,9 @@ public class MatchDayResult {
         return this;
     }
 
-    public MatchDayResult addAll(List<MatchDayResult> matchDayResults) {
+    public MatchDayResult addAll(List<MatchDayResult> matchDayResults, Comparator<Object> comparator) {
         matchDayResults.forEach(this::add);
-        tableStatistics = tableStatistics.stream().sorted(Comparator.comparingInt(t -> ((TableStatistics) t).getPoints()).reversed()).collect(Collectors.toList());
+        tableStatistics = tableStatistics.stream().sorted(comparator).collect(Collectors.toList());
         return this;
     }
 

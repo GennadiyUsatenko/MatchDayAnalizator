@@ -64,7 +64,7 @@ public class Season {
     public Season setTableStatList() {
         List<List<TableStatistics>> lists = new ArrayList<>(matchDays.size());
         for (int matchDayNamber = 1; matchDayNamber <= matchDays.size(); matchDayNamber++) {
-            lists.add(getTableStatList(matchDayNamber));
+            lists.add(getTableStatList(matchDayNamber, Comparator.comparingInt(t -> ((TableStatistics) t).getPoints()).reversed()));
         }
         tableStatistics = lists;
         return this;
@@ -73,23 +73,20 @@ public class Season {
     public Season setTableStatList(int matchDayLimit) {
         List<List<TableStatistics>> lists = new ArrayList<>(matchDayLimit);
         for (int matchDayNamber = 1; matchDayNamber <= matchDayLimit; matchDayNamber++) {
-            lists.add(getTableStatList(matchDayNamber));
+            lists.add(getTableStatList(matchDayNamber, Comparator.comparingInt(t -> ((TableStatistics) t).getPoints()).reversed()));
         }
         tableStatistics = lists;
         return this;
     }
 
-    public List<TableStatistics> getTableStatList() {
+    public List<TableStatistics> getTableStatList(Comparator<Object> comparator) {
         List<MatchDayResult> matchDayResults = matchDays.stream().map(MatchDay::getMatchDayResult).collect(Collectors.toList());
-        return matchDayResults.get(0).addAll(matchDayResults.stream().skip(1).collect(Collectors.toList())).getTableStatistics();
+        return matchDayResults.get(0).addAll(matchDayResults.stream().skip(1).collect(Collectors.toList()), comparator).getTableStatistics();
     }
 
-    public List<TableStatistics> getTableStatList(int matchDayLimit) {
+    public List<TableStatistics> getTableStatList(int matchDayLimit, Comparator<Object> comparator) {
         List<MatchDayResult> matchDayResults = matchDays.stream().limit(matchDayLimit).map(MatchDay::getMatchDayResult).collect(Collectors.toList());
-        return matchDayResults.get(0).addAll(matchDayResults.stream().skip(1).collect(Collectors.toList())).getTableStatistics();
+        return matchDayResults.get(0).addAll(matchDayResults.stream().skip(1).collect(Collectors.toList()), comparator).getTableStatistics();
     }
 
-    public int getMatchDaySizeLimit() {
-        return teams.size() / 2;
-    }
 }

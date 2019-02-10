@@ -1,6 +1,5 @@
 package com.example.demo.model;
 
-import com.example.demo.model.enums.StrategyType;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -12,9 +11,33 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @ToString(callSuper = true)
 @NoArgsConstructor
-public class Balance {
+public class Balance implements Cloneable {
 
-    private Double balance = 0d;
+    public Balance(Double startBalance) {
+        this.startBalance = startBalance;
+        this.currentBalance = startBalance;
+    }
 
-    private StrategyType strategyType = StrategyType.STANDART;
+    private Double startBalance = 0d;
+
+    private Double currentBalance = 0d;
+
+    private Double profit = 0d;
+
+    @Override
+    public Balance clone() throws CloneNotSupportedException {
+        return (Balance) super.clone();
+    }
+
+    public Balance goodBet(long teamSize, double coefficient) {
+        currentBalance += startBalance * Math.pow(coefficient, teamSize);
+        profit = currentBalance - startBalance;
+        return this;
+    }
+
+    public Balance poorBet() {
+        currentBalance -= startBalance;
+        profit = currentBalance - startBalance;
+        return this;
+    }
 }
