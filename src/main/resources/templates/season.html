@@ -57,7 +57,7 @@
                     <th:block th:each="match, matchiter : ${matchDay.matches}">
                         <tr>
                             <td th:text="${match.homeSide.team.name}"></td>
-                            <th scope="row" th:text="${match.homeSide.goals} + ':' + ${match.guestSide.goals}"></th>
+                            <th scope="row" th:text="${match.inFuture} ? '- : -' : ${match.homeSide.goals} + ':' + ${match.guestSide.goals}"></th>
                             <td th:text="${match.guestSide.team.name}"></td>
                         </tr>
                     </th:block>
