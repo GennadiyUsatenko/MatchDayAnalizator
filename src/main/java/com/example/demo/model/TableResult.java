@@ -29,6 +29,7 @@ public class TableResult {
     private int matchDaySize;
 
     public List<TableStatistics> getTableStatList() {
-        return matchDayResults.get(0).addAll(matchDayResults.stream().skip(1).collect(Collectors.toList())).getTableStatistics();
+        return null;
+//        return matchDayResults.get(0).addAll(matchDayResults.stream().skip(1).collect(Collectors.toList())).getTableStatistics();
     }
 }
