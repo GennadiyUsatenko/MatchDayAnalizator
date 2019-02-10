@@ -7,6 +7,7 @@ import lombok.ToString;
 import lombok.experimental.Accessors;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 @Getter
@@ -14,11 +15,17 @@ import java.util.stream.Collectors;
 @Accessors(chain = true)
 @ToString(callSuper = true)
 @NoArgsConstructor
-public class Championship {
+public class Season {
 
-    public Championship(String name, int seasonNumber) {
+    public Season(String name, int seasonNumber) {
         this.name = name;
         this.seasonNumber = seasonNumber;
+    }
+
+    public Season(String name, int seasonNumber, int sortsRuSeasonNumber) {
+        this.name = name;
+        this.seasonNumber = seasonNumber;
+        this.sortsRuSeasonNumber = sortsRuSeasonNumber;
     }
 
     private String name;
@@ -29,16 +36,24 @@ public class Championship {
 
     private int seasonNumber;
 
+    private int sortsRuSeasonNumber;
+
     private List<List<TableStatistics>> tableStatistics;
 
-    public Championship addToMatchDays(List<MatchDay> matchDays) {
+    public Season addToMatchDays(List<MatchDay> matchDays) {
         this.matchDays = Optional.ofNullable(this.matchDays).orElse(new ArrayList<>());
-        if (this.matchDays.stream().anyMatch(matchDay -> matchDay.getMatchDayNumber() == matchDays.get(0).getMatchDayNumber())) {
-            this.matchDays.stream().filter(matchDay -> matchDay.getMatchDayNumber() == matchDays.get(0).getMatchDayNumber()).findFirst().get().getMatches().addAll(matchDays.get(0).getMatches());
-            matchDays.remove(0);
-        }
-        this.matchDays.addAll(matchDays);
-        this.matchDays = this.matchDays.stream().sorted(Comparator.comparingInt(m -> m.getMatchDayNumber())).collect(Collectors.toList());
+
+        List<Integer> matchDaysNumbers = this.matchDays.stream().map(MatchDay::getMatchDayNumber).collect(Collectors.toList());
+
+        List<MatchDay> matchDaysAlreadyIn = matchDays.stream().filter(matchDay -> matchDaysNumbers.contains(matchDay.getMatchDayNumber())).collect(Collectors.toList());
+        List<MatchDay> matchDaysNotInYet = matchDays.stream().filter(matchDay -> !matchDaysNumbers.contains(matchDay.getMatchDayNumber())).collect(Collectors.toList());
+
+        matchDaysAlreadyIn.forEach(matchDay -> {
+            this.matchDays.stream().filter(subMatchDay -> subMatchDay.getMatchDayNumber() == matchDay.getMatchDayNumber()).findFirst().get().getMatches().addAll(matchDay.getMatches());
+        });
+
+        this.matchDays.addAll(matchDaysNotInYet);
+        this.matchDays = this.matchDays.stream().sorted(Comparator.comparingInt(MatchDay::getMatchDayNumber)).collect(Collectors.toList());
         return this;
     }
 
@@ -46,7 +61,7 @@ public class Championship {
         return teams.stream().filter(t -> t.getName().equals(teamName)).findFirst().orElse(null);
     }
 
-    public Championship setTableStatList() {
+    public Season setTableStatList() {
         List<List<TableStatistics>> lists = new ArrayList<>(matchDays.size());
         for (int matchDayNamber = 1; matchDayNamber <= matchDays.size(); matchDayNamber++) {
             lists.add(getTableStatList(matchDayNamber));
@@ -55,7 +70,7 @@ public class Championship {
         return this;
     }
 
-    public Championship setTableStatList(int matchDayLimit) {
+    public Season setTableStatList(int matchDayLimit) {
         List<List<TableStatistics>> lists = new ArrayList<>(matchDayLimit);
         for (int matchDayNamber = 1; matchDayNamber <= matchDayLimit; matchDayNamber++) {
             lists.add(getTableStatList(matchDayNamber));
@@ -72,5 +87,9 @@ public class Championship {
     public List<TableStatistics> getTableStatList(int matchDayLimit) {
         List<MatchDayResult> matchDayResults = matchDays.stream().limit(matchDayLimit).map(MatchDay::getMatchDayResult).collect(Collectors.toList());
         return matchDayResults.get(0).addAll(matchDayResults.stream().skip(1).collect(Collectors.toList())).getTableStatistics();
+    }
+
+    public int getMatchDaySizeLimit() {
+        return teams.size() / 2;
     }
 }

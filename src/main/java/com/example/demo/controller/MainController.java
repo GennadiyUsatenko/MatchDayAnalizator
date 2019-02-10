@@ -26,10 +26,10 @@ public class MainController {
         return new ResponseEntity<String>("ok", HttpStatus.OK);
     }
 
-    @GetMapping("/index/{countryName}/{seasonNumber}")
-    public ModelAndView start(@PathVariable("countryName") String countryName, @PathVariable("seasonNumber") Integer seasonNumber) {
-        ModelAndView modelAndView = new ModelAndView("index");
-        modelAndView.addObject("epl", mainService.parseChampionship(countryName, seasonNumber));
+    @GetMapping("/season/{countryName}/{seasonNumber}")
+    public ModelAndView season(@PathVariable("countryName") String countryName, @PathVariable("seasonNumber") Integer seasonNumber) {
+        ModelAndView modelAndView = new ModelAndView("season");
+        modelAndView.addObject("epl", mainService.parseSeason(countryName, seasonNumber));
         return modelAndView;
     }
 }

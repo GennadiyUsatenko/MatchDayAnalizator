@@ -1,7 +1,7 @@
 package com.example.demo.controller.bean;
 
 import com.example.demo.model.Balance;
-import com.example.demo.model.Championship;
+import com.example.demo.model.Season;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -15,7 +15,7 @@ import lombok.experimental.Accessors;
 @NoArgsConstructor
 public class ResponseBean {
 
-    private Championship championship;
+    private Season season;
 
     private Balance balance;
 }

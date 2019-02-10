@@ -16,13 +16,13 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 public class TableResult {
 
-    public TableResult(Championship championship, List<MatchDayResult> matchDayResults) {
-        this.championship = championship;
+    public TableResult(Season season, List<MatchDayResult> matchDayResults) {
+        this.season = season;
         this.matchDayResults = matchDayResults;
         matchDaySize = matchDayResults.size();
     }
 
-    private Championship championship;
+    private Season season;
 
     private List<MatchDayResult> matchDayResults;
 
