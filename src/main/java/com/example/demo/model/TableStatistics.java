@@ -66,6 +66,10 @@ public class TableStatistics {
 
     private int goalsDifference;
 
+    private boolean isPotentiallyScored;
+
+    private boolean isPotentiallyScoredInPool;
+
     public TableStatistics add(TableStatistics tableStatistics) {
         this.matchesPlayed += tableStatistics.getMatchesPlayed();
         this.matchesWon += tableStatistics.getMatchesWon();
