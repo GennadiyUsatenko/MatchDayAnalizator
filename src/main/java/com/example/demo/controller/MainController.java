@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.model.Balance;
 import com.example.demo.model.Season;
 import com.example.demo.model.enums.BettingStrategyType;
 import com.example.demo.service.BettingStrategyService;
@@ -14,6 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.awt.*;
+import java.util.*;
+import java.util.List;
 
 /**
  * Created by Михаил on 03.02.2019.
@@ -34,10 +37,14 @@ public class MainController {
 
     @GetMapping("/season/{countryName}/{seasonNumber}")
     public ModelAndView season(@PathVariable("countryName") String countryName, @PathVariable("seasonNumber") Integer seasonNumber) throws CloneNotSupportedException {
-        Season season = mainService.parseSeason(countryName, seasonNumber);
         ModelAndView modelAndView = new ModelAndView("season");
-        modelAndView.addObject("epl", season);
-        modelAndView.addObject("balance", bettingStrategyService.prepareBalance(season, BettingStrategyType.CLASSIC_WITH_3_TEAMS));
+        Season season = mainService.parseSeason(countryName, seasonNumber);
+        List<Balance> balances = bettingStrategyService.prepareBalance(season, BettingStrategyType.CLASSIC_WITH_3_TEAMS);
+
+        modelAndView.addObject("season", season);
+        modelAndView.addObject("balance", balances);
+//        modelAndView.addObject("info", String.format("%s season %s; Start balance - %s; End balance - "));
+
         return modelAndView;
     }
 }

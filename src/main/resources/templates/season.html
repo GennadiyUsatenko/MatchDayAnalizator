@@ -3,12 +3,16 @@
       xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-    <title th:text="${epl.name}"></title>
+    <title th:text="${season.name} + ' - ' + ${season.seasonNumber}"></title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
 </head>
 <body>
-<th:block th:each="matchDay, matchDayIter : ${epl.matchDays}">
+<h1 class="display-3 text-uppercase" th:text="${season.name} + ' - ' + ${season.seasonNumber}"></h1>
+<h1 class="display-3" th:text="'Start balance - ' + ${balance[balance.size - 1].startBalance} + ' $'"></h1>
+<h1 class="display-3" th:text="'Current balance - ' + ${balance[balance.size - 1].currentBalance} + ' $'"></h1>
+
+<th:block th:each="matchDay, matchDayIter : ${season.matchDays}">
     <hr style="border: 10px solid green;"/>
     <h3 class="text-primary text-center" th:text="'Match Day # ' + ${matchDay.matchDayNumber}"></h3>
     <div class="row">
@@ -30,7 +34,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <th:block th:each="stat, statIter : ${epl.tableStatistics[matchDayIter.index]}">
+                <th:block th:each="stat, statIter : ${season.tableStatistics[matchDayIter.index]}">
                     <tr>
                         <td th:text="${statIter.count}"></td>
                         <th scope="row" th:text="${stat.team.name}"></th>
