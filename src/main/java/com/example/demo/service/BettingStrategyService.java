@@ -21,13 +21,13 @@ public class BettingStrategyService {
     private static final Integer PREPARE_STATISTICS_MATCH_DAY_LIMIT = 3;
     private static final Double DEFAULT_COEFFICIENT = 1.65;
     private static final Double MINIMAL_POSSIBLE_PERCENT_OF_SCORED_FOR_3_TEAMS = 0.7;
-    private static final Double MINIMAL_POSSIBLE_PERCENT_OF_SCORED_FOR_POOL_FOR_3_TEAMS = 0.4;
+    private static final Double MINIMAL_POSSIBLE_PERCENT_OF_SCORED_FOR_POOL_FOR_3_TEAMS = 0.3;
     private static final BettingStrategyType DEFAULT_STATEGY_TYPE = CLASSIC_WITH_3_TEAMS;
 
     public List<Balance> prepareBalance(Season season, BettingStrategyType strategyType) throws CloneNotSupportedException {
         List<Balance> balances = new ArrayList<>(season.getMatchDays().size());
         balances.add(new Balance(10d));
-        prepareStatistics(season, strategyType);
+        prepareStatistics(season);
 
         for (MatchDay matchDay: season.getMatchDays().stream().skip(1).collect(Collectors.toList())) {
             if (matchDay.getMatches().stream().anyMatch(Match::isPotentiallyScored)) {
@@ -48,6 +48,9 @@ public class BettingStrategyService {
             Map<Team, TableStatistics> tableStatisticsMap = season.getTableStatList(matchDayNumber.get(), null).stream().collect(Collectors.toMap(TableStatistics::getTeam, t -> t));
             season.getMatchDays().get(matchDayNumber.get()).getMatches().forEach(match -> {
                 match.setPossibleScoredPercent(tableStatisticsMap.get(match.getHomeTeam()).getPossibleScoredPercent() * tableStatisticsMap.get(match.getGuestTeam()).getPossibleScoredPercent());
+            });
+            season.getMatchDays().get(matchDayNumber.get()).getMatches().stream().sorted(Comparator.comparingDouble(Match::getPossibleScoredPercent).reversed()).limit(2).forEach(match -> {
+                match.setPotentiallyScored(match.getPossibleScoredPercent() > MINIMAL_POSSIBLE_PERCENT_OF_SCORED_FOR_POOL_FOR_3_TEAMS);
             });
         }
         return season;
