@@ -21,21 +21,20 @@ public class MainService {
     private static final String SPORTS_RU_CALENDAR_LINK = "https://www.sports.ru/%s/calendar/?s=%s&m=%s";
 
     public Season parseSeason(String countryName, Integer seasonNumber) {
-        Season epl = convertToSeasonBySortsRu(countryName, seasonNumber);
+        Season season = convertToSeasonBySortsRu(countryName, seasonNumber);
 
-        Document document = jsoupConnect(String.format(SPORTS_RU_TABLE_LINK, countryName, epl.getSortsRuSeasonNumber()));
+        Document document = jsoupConnect(String.format(SPORTS_RU_TABLE_LINK, countryName, season.getSortsRuSeasonNumber()));
         if (document != null) {
-            epl.setTeams(document.select("table.stat-table tbody a.name").stream().map(t -> new Team(t.attr("title"))).collect(Collectors.toList()));
+            season.setTeams(document.select("table.stat-table tbody a.name").stream().map(t -> new Team(t.attr("title"))).collect(Collectors.toList()));
         }
         for (int month = 1; month <= 12; month++) {
-            if (month == 6 || month == 7) continue;
-            document = jsoupConnect(String.format(SPORTS_RU_CALENDAR_LINK, countryName, epl.getSortsRuSeasonNumber(), month));
+            document = jsoupConnect(String.format(SPORTS_RU_CALENDAR_LINK, countryName, season.getSortsRuSeasonNumber(), month));
             if (document != null) {
                 Iterator<Integer> matchDayNumbers = document.select("h3.titleH3").stream().filter(e -> e.text().contains("тур")).map(e -> Integer.parseInt(e.text().replaceAll("\\D", ""))).collect(Collectors.toList()).iterator();
-                List<MatchDay> matchDays = document.select("table.stat-table tbody").stream().map(matchDay -> {
+                List<MatchDay> matchDays = document.select("table.stat-table tbody").stream().limit(document.select("h3.titleH3").stream().filter(e -> e.text().contains("тур")).count()).map(matchDay -> {
                     List<Match> matches = matchDay.select("tr").stream().map(match -> {
-                        Team homeTeam = epl.findTeamByName(match.select("td.owner-td").text());
-                        Team guestTeam = epl.findTeamByName(match.select("td.guests-td").text());
+                        Team homeTeam = season.findTeamByName(match.select("td.owner-td").text());
+                        Team guestTeam = season.findTeamByName(match.select("td.guests-td").text());
                         int[] goals = Stream.of(match.select("td.score-td").text().split(":")).filter(s -> s.matches(".*\\d+.*")).mapToInt(s -> Integer.parseInt(s.trim())).toArray();
 
                         if (goals.length > 0) {
@@ -49,10 +48,13 @@ public class MainService {
                     return new MatchDay(matches, matchDayNumbers.next(), matches.stream().allMatch(Match::isInFuture));
                 }).collect(Collectors.toList());
 
-                epl.addToMatchDays(matchDays);
+                season.addToMatchDays(matchDays);
             }
         }
-        return epl.setTableStatList();
+        if (!season.isValid()) {
+            throw new IllegalArgumentException(String.format("Season - %s/%s is not valid", season.getName(), season.getSeasonNumber()));
+        }
+        return season.setTableStatList();
     }
 
     private Document jsoupConnect(String url) {
@@ -149,9 +151,9 @@ public class MainService {
                     case 2013:
                         return new Season(countryName, seasonNumber, 3255);
                     case 2012:
-                        return new Season(countryName, seasonNumber, 1395);
+                        return new Season(countryName, seasonNumber, 1973);
                     case 2011:
-                        return new Season(countryName, seasonNumber, 1334);
+                        return new Season(countryName, seasonNumber, 1395);
                     case 2010:
                         return new Season(countryName, seasonNumber, 680);
                     case 2009:

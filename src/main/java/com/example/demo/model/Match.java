@@ -36,6 +36,16 @@ public class Match {
 
     private boolean isInFuture;
 
+    private Double possibleScoredPercent;
+
+    public Team getHomeTeam() {
+        return homeSide.getTeam();
+    }
+
+    public Team getGuestTeam() {
+        return guestSide.getTeam();
+    }
+
     public List<TableStatistics> getTableStatList() {
         return new ArrayList<>(Arrays.asList(new TableStatistics(this, true), new TableStatistics(this, false)));
     }

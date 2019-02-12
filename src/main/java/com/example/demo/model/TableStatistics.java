@@ -70,6 +70,10 @@ public class TableStatistics {
 
     private boolean isPotentiallyScoredInPool;
 
+    public Double getPossibleScoredPercent() {
+        return ((double)matchesScored / (double)matchesPlayed);
+    }
+
     public TableStatistics add(TableStatistics tableStatistics) {
         this.matchesPlayed += tableStatistics.getMatchesPlayed();
         this.matchesWon += tableStatistics.getMatchesWon();

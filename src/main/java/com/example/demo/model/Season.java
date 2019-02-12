@@ -8,6 +8,7 @@ import lombok.experimental.Accessors;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @Getter
@@ -39,6 +40,10 @@ public class Season {
     private int sortsRuSeasonNumber;
 
     private List<List<TableStatistics>> tableStatistics;
+
+    public boolean isValid() {
+        return teams.size() != 0 && matchDays.size() == (teams.size() - 1) * 2 && matchDays.stream().allMatch(m -> m.getMatches().size() == (double)teams.size() / 2d);
+    }
 
     public Season addToMatchDays(List<MatchDay> matchDays) {
         this.matchDays = Optional.ofNullable(this.matchDays).orElse(new ArrayList<>());
@@ -85,6 +90,7 @@ public class Season {
     }
 
     public List<TableStatistics> getTableStatList(int matchDayLimit, Comparator<Object> comparator) {
+        if (comparator == null) comparator = Comparator.comparingInt(t -> ((TableStatistics) t).getPoints()).reversed();
         List<MatchDayResult> matchDayResults = matchDays.stream().limit(matchDayLimit).map(MatchDay::getMatchDayResult).collect(Collectors.toList());
         return matchDayResults.get(0).addAll(matchDayResults.stream().skip(1).collect(Collectors.toList()), comparator).getTableStatistics();
     }
