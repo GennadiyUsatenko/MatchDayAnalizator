@@ -26,17 +26,28 @@ public class Match {
         this.isScored = isScored;
     }
 
+    public Match(Side homeSide, Side guestSide, boolean isScored, boolean isDoubleScored) {
+        this.homeSide = homeSide;
+        this.guestSide = guestSide;
+        this.isScored = isScored;
+        this.isDoubleScored = isDoubleScored;
+    }
+
     private Side homeSide;
 
     private Side guestSide;
 
     private boolean isScored;
 
+    private boolean isDoubleScored;
+
     private boolean isPotentiallyScored;
 
     private boolean isInFuture;
 
     private Double possibleScoredPercent;
+
+    private Integer minimalGoalIndicator;
 
     public Team getHomeTeam() {
         return homeSide.getTeam();

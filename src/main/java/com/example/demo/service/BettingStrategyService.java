@@ -43,14 +43,27 @@ public class BettingStrategyService {
         return balances;
     }
 
+    public Season prepareStatisticsByGoals(Season season) {
+        for (AtomicInteger matchDayNumber = new AtomicInteger(PREPARE_STATISTICS_MATCH_DAY_LIMIT); matchDayNumber.get() < season.getMatchDays().size(); matchDayNumber.incrementAndGet()) {
+            Map<Team, TableStatistics> tableStatisticsTeamMap = season.getTableStatList(matchDayNumber.get(), null).stream().collect(Collectors.toMap(TableStatistics::getTeam, t -> t));
+            season.getMatchDays().get(matchDayNumber.get()).getMatches().forEach(match -> {
+                match.setMinimalGoalIndicator(tableStatisticsTeamMap.get(match.getHomeTeam()).getMinimalGoalIndicator() + tableStatisticsTeamMap.get(match.getGuestTeam()).getMinimalGoalIndicator());
+            });
+            season.getMatchDays().get(matchDayNumber.get()).getMatches().stream().sorted(Comparator.comparingInt(Match::getMinimalGoalIndicator).reversed()).limit(2).forEach(match -> {
+                match.setPotentiallyScored(true);
+            });
+        }
+        return season;
+    }
+
     public Season prepareStatistics(Season season) {
         for (AtomicInteger matchDayNumber = new AtomicInteger(PREPARE_STATISTICS_MATCH_DAY_LIMIT); matchDayNumber.get() < season.getMatchDays().size(); matchDayNumber.incrementAndGet()) {
             Map<Team, TableStatistics> tableStatisticsMap = season.getTableStatList(matchDayNumber.get(), null).stream().collect(Collectors.toMap(TableStatistics::getTeam, t -> t));
             season.getMatchDays().get(matchDayNumber.get()).getMatches().forEach(match -> {
-                match.setPossibleScoredPercent(tableStatisticsMap.get(match.getHomeTeam()).getPossibleScoredPercent() * tableStatisticsMap.get(match.getGuestTeam()).getPossibleScoredPercent());
+                match.setPossibleScoredPercent(tableStatisticsMap.get(match.getHomeTeam()).getPossibleDoubleScoredPercent() * tableStatisticsMap.get(match.getGuestTeam()).getPossibleDoubleScoredPercent());
             });
             season.getMatchDays().get(matchDayNumber.get()).getMatches().stream().sorted(Comparator.comparingDouble(Match::getPossibleScoredPercent).reversed()).limit(2).forEach(match -> {
-                match.setPotentiallyScored(match.getPossibleScoredPercent() > MINIMAL_POSSIBLE_PERCENT_OF_SCORED_FOR_POOL_FOR_3_TEAMS);
+                match.setPotentiallyScored(true);
             });
         }
         return season;

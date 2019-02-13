@@ -22,6 +22,7 @@ public class TableStatistics {
                 case WIN:
                     matchesWon = 1;
                     matchesScored = match.isScored() ? 1 : 0;
+                    matchesDoubleScored = match.isDoubleScored() ? 1 : 0;
                     points = 3;
                     goalsFor = isForHomeSide ? match.getHomeSide().getGoals() : match.getGuestSide().getGoals();
                     goalsAgainst = isForHomeSide ? match.getGuestSide().getGoals() : match.getHomeSide().getGoals();
@@ -29,6 +30,7 @@ public class TableStatistics {
                 case DRAW:
                     matchesDrawn = 1;
                     matchesScored = match.isScored() ? 1 : 0;
+                    matchesDoubleScored = match.isDoubleScored() ? 1 : 0;
                     points = 1;
                     goalsFor = isForHomeSide ? match.getHomeSide().getGoals() : match.getGuestSide().getGoals();
                     goalsAgainst = isForHomeSide ? match.getGuestSide().getGoals() : match.getHomeSide().getGoals();
@@ -36,6 +38,7 @@ public class TableStatistics {
                 case LOSE:
                     matchesLost = 1;
                     matchesScored = match.isScored() ? 1 : 0;
+                    matchesDoubleScored = match.isDoubleScored() ? 1 : 0;
                     goalsFor = isForHomeSide ? match.getHomeSide().getGoals() : match.getGuestSide().getGoals();
                     goalsAgainst = isForHomeSide ? match.getGuestSide().getGoals() : match.getHomeSide().getGoals();
                     break;
@@ -58,6 +61,8 @@ public class TableStatistics {
 
     private int matchesScored;
 
+    private int matchesDoubleScored;
+
     private int points;
 
     private int goalsFor;
@@ -70,8 +75,16 @@ public class TableStatistics {
 
     private boolean isPotentiallyScoredInPool;
 
+    public Integer getMinimalGoalIndicator() {
+        return Integer.min(goalsFor, goalsAgainst);
+    }
+
     public Double getPossibleScoredPercent() {
         return ((double)matchesScored / (double)matchesPlayed);
+    }
+
+    public Double getPossibleDoubleScoredPercent() {
+        return ( (double)((matchesScored - matchesDoubleScored) + (matchesDoubleScored * 2)) / (double)matchesPlayed);
     }
 
     public TableStatistics add(TableStatistics tableStatistics) {
@@ -80,6 +93,7 @@ public class TableStatistics {
         this.matchesDrawn += tableStatistics.getMatchesDrawn();
         this.matchesLost += tableStatistics.getMatchesLost();
         this.matchesScored += tableStatistics.getMatchesScored();
+        this.matchesDoubleScored += tableStatistics.getMatchesDoubleScored();
         this.points += tableStatistics.getPoints();
         this.goalsFor += tableStatistics.getGoalsFor();
         this.goalsAgainst += tableStatistics.getGoalsAgainst();

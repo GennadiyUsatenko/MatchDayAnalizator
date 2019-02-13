@@ -39,7 +39,7 @@ public class MainService {
 
                         if (goals.length > 0) {
                             boolean isScored = goals[0] > 0 && goals[1] > 0;
-                            return new Match(new Side(homeTeam, goals[0]), new Side(guestTeam, goals[1]), isScored);
+                            return new Match(new Side(homeTeam, goals[0]), new Side(guestTeam, goals[1]), isScored, goals[0] > 1 && goals[1] > 1);
                         } else {
                             return new Match(new Side(homeTeam), new Side(guestTeam)).setInFuture(true);
                         }
