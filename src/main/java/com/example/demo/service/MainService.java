@@ -33,15 +33,16 @@ public class MainService {
                 Iterator<Integer> matchDayNumbers = document.select("h3.titleH3").stream().filter(e -> e.text().contains("тур")).map(e -> Integer.parseInt(e.text().replaceAll("\\D", ""))).collect(Collectors.toList()).iterator();
                 List<MatchDay> matchDays = document.select("table.stat-table tbody").stream().limit(document.select("h3.titleH3").stream().filter(e -> e.text().contains("тур")).count()).map(matchDay -> {
                     List<Match> matches = matchDay.select("tr").stream().map(match -> {
+                        String date = match.select("td.name-td").text();
                         Team homeTeam = season.findTeamByName(match.select("td.owner-td").text());
                         Team guestTeam = season.findTeamByName(match.select("td.guests-td").text());
                         int[] goals = Stream.of(match.select("td.score-td").text().split(":")).filter(s -> s.matches(".*\\d+.*")).mapToInt(s -> Integer.parseInt(s.trim())).toArray();
 
                         if (goals.length > 0) {
                             boolean isScored = goals[0] > 0 && goals[1] > 0;
-                            return new Match(new Side(homeTeam, goals[0]), new Side(guestTeam, goals[1]), isScored, goals[0] > 1 && goals[1] > 1);
+                            return new Match(date, new Side(homeTeam, goals[0]), new Side(guestTeam, goals[1]), isScored, goals[0] > 1 && goals[1] > 1);
                         } else {
-                            return new Match(new Side(homeTeam), new Side(guestTeam)).setInFuture(true);
+                            return new Match(date, new Side(homeTeam), new Side(guestTeam)).setInFuture(true);
                         }
                     }).collect(Collectors.toList());
 

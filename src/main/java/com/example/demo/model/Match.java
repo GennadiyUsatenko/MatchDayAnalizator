@@ -15,23 +15,28 @@ import java.util.*;
 @NoArgsConstructor
 public class Match {
 
-    public Match(Side homeSide, Side guestSide) {
+    public Match(String date, Side homeSide, Side guestSide) {
+        this.date = date;
         this.homeSide = homeSide;
         this.guestSide = guestSide;
     }
 
-    public Match(Side homeSide, Side guestSide, boolean isScored) {
+    public Match(String date, Side homeSide, Side guestSide, boolean isScored) {
+        this.date = date;
         this.homeSide = homeSide;
         this.guestSide = guestSide;
         this.isScored = isScored;
     }
 
-    public Match(Side homeSide, Side guestSide, boolean isScored, boolean isDoubleScored) {
+    public Match(String date, Side homeSide, Side guestSide, boolean isScored, boolean isDoubleScored) {
+        this.date = date;
         this.homeSide = homeSide;
         this.guestSide = guestSide;
         this.isScored = isScored;
         this.isDoubleScored = isDoubleScored;
     }
+
+    private String date;
 
     private Side homeSide;
 

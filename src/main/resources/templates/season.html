@@ -54,14 +54,16 @@
             <table class="table">
                 <thead>
                 <tr>
-                    <th scope="col" style="width: 40%">Home</th>
-                    <th scope="col" style="width: 20%">Score</th>
-                    <th scope="col" style="width: 40%">Guest</th>
+                    <th scope="col" style="width: 30%">Date</th>
+                    <th scope="col" style="width: 30%">Home</th>
+                    <th scope="col" style="width: 10%">Score</th>
+                    <th scope="col" style="width: 30%">Guest</th>
                 </tr>
                 </thead>
                 <tbody>
                     <th:block th:each="match, matchiter : ${matchDay.matches}">
                         <tr th:class="${not match.potentiallyScored} ? '' : (${match.potentiallyScored && match.scored} ? 'table-success' : 'table-danger')">
+                            <th scope="row" th:text="${match.date}"></th>
                             <td th:text="${match.homeSide.team.name}"></td>
                             <th scope="row" th:text="${match.inFuture} ? '- : -' : ${match.homeSide.goals} + ':' + ${match.guestSide.goals}"></th>
                             <td th:text="${match.guestSide.team.name}"></td>
