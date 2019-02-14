@@ -44,4 +44,12 @@ public class MatchDay {
         return new MatchDayResult(this, matches.stream().map(Match::getTableStatList).flatMap(List::stream).collect(Collectors.toList()));
     }
 
+    public Double getAverageGoalForHomeSide() {
+        return matches.stream().filter(match -> !match.isInFuture()).mapToInt(Match::getGoalForHomeSide).summaryStatistics().getAverage();
+    }
+
+    public Double getAverageGoalForGuestSide() {
+        return matches.stream().filter(match -> !match.isInFuture()).mapToInt(Match::getGoalForGuestSide).summaryStatistics().getAverage();
+    }
+
 }

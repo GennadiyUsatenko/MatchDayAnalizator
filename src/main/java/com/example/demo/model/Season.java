@@ -41,6 +41,15 @@ public class Season {
 
     private List<List<TableStatistics>> tableStatistics;
 
+    private Double averageGoalForHomeSide;
+
+    private Double averageGoalForGuestSide;
+
+    public void setAverageGoals() {
+        averageGoalForHomeSide = matchDays.stream().filter(matchDay -> !matchDay.isInFuture()).mapToDouble(MatchDay::getAverageGoalForHomeSide).summaryStatistics().getAverage();
+        averageGoalForGuestSide = matchDays.stream().filter(matchDay -> !matchDay.isInFuture()).mapToDouble(MatchDay::getAverageGoalForGuestSide).summaryStatistics().getAverage();
+    }
+
     public boolean isValid() {
         return teams.size() != 0 && matchDays.size() == (teams.size() - 1) * 2 && matchDays.stream().allMatch(m -> m.getMatches().size() == (double)teams.size() / 2d);
     }
@@ -72,6 +81,7 @@ public class Season {
             lists.add(getTableStatList(matchDayNamber, Comparator.comparingInt(t -> ((TableStatistics) t).getPoints()).reversed()));
         }
         tableStatistics = lists;
+        setAverageGoals();
         return this;
     }
 
@@ -81,6 +91,7 @@ public class Season {
             lists.add(getTableStatList(matchDayNamber, Comparator.comparingInt(t -> ((TableStatistics) t).getPoints()).reversed()));
         }
         tableStatistics = lists;
+        setAverageGoals();
         return this;
     }
 

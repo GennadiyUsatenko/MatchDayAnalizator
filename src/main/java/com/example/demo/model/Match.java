@@ -62,6 +62,14 @@ public class Match {
         return guestSide.getTeam();
     }
 
+    public Integer getGoalForHomeSide() {
+        return homeSide.getGoals();
+    }
+
+    public Integer getGoalForGuestSide() {
+        return guestSide.getGoals();
+    }
+
     public List<TableStatistics> getTableStatList() {
         return new ArrayList<>(Arrays.asList(new TableStatistics(this, true), new TableStatistics(this, false)));
     }
