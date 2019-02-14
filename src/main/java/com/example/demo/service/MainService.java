@@ -7,6 +7,10 @@ import org.jsoup.nodes.Document;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.time.*;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -27,9 +31,31 @@ public class MainService {
         if (document != null) {
             season.setTeams(document.select("table.stat-table tbody a.name").stream().map(t -> new Team(t.attr("title"))).collect(Collectors.toList()));
         }
+        List<Match> matchesForBelgium = new ArrayList<>();
         for (int month = 1; month <= 12; month++) {
             document = jsoupConnect(String.format(SPORTS_RU_CALENDAR_LINK, countryName, season.getSortsRuSeasonNumber(), month));
+
             if (document != null) {
+                if (countryName.equals("jupiler-league")) {
+                    List<Match> matches = document.select("table.stat-table tbody tr").stream().map(match -> {
+                        String date = match.select("td.name-td").text();
+                        Team homeTeam = season.findTeamByName(match.select("td.owner-td").text());
+                        Team guestTeam = season.findTeamByName(match.select("td.guests-td").text());
+                        int[] goals = Stream.of(match.select("td.score-td").text().split(":")).filter(s -> s.matches(".*\\d+.*")).mapToInt(s -> Integer.parseInt(s.trim())).toArray();
+
+                        if (goals.length > 0) {
+                            boolean isScored = goals[0] > 0 && goals[1] > 0;
+                            return new Match(date, new Side(homeTeam, goals[0]), new Side(guestTeam, goals[1]), isScored, goals[0] > 1 && goals[1] > 1);
+                        } else {
+                            return new Match(date, new Side(homeTeam), new Side(guestTeam)).setInFuture(true);
+                        }
+                    }).collect(Collectors.toList());
+
+                    matchesForBelgium.addAll(matches);
+                    continue;
+                }
+
+
                 Iterator<Integer> matchDayNumbers = document.select("h3.titleH3").stream().filter(e -> e.text().contains("тур")).map(e -> Integer.parseInt(e.text().replaceAll("\\D", ""))).collect(Collectors.toList()).iterator();
                 List<MatchDay> matchDays = document.select("table.stat-table tbody").stream().limit(document.select("h3.titleH3").stream().filter(e -> e.text().contains("тур")).count()).map(matchDay -> {
                     List<Match> matches = matchDay.select("tr").stream().map(match -> {
@@ -52,6 +78,22 @@ public class MainService {
                 season.addToMatchDays(matchDays);
             }
         }
+
+        if (countryName.equals("jupiler-league")) {
+            matchesForBelgium = matchesForBelgium.stream()
+                    .sorted((m1, m2) -> {
+                        String[] arr1 = m1.getDate().split("\\|")[0].trim().split("\\.");
+                        String[] arr2 = m2.getDate().split("\\|")[0].trim().split("\\.");
+                        return  OffsetDateTime.of(LocalDate.parse(String.format("%s-%s-%s", arr1[2], arr1[1], arr1[0])), LocalTime.NOON, ZoneOffset.UTC).compareTo(
+                                OffsetDateTime.of(LocalDate.parse(String.format("%s-%s-%s", arr2[2], arr2[1], arr2[0])), LocalTime.NOON, ZoneOffset.UTC));
+                    }).collect(Collectors.toList());
+
+            for (int i = 1; i <= 30; i++) {
+                List<Match> matches = matchesForBelgium.stream().limit(8 * i).skip(8 * i - 8).collect(Collectors.toList());
+                season.addToMatchDays(Arrays.asList(new MatchDay(matches, i, matches.stream().allMatch(Match::isInFuture))));
+            }
+        }
+
         if (!season.isValid()) {
             throw new IllegalArgumentException(String.format("Season - %s/%s is not valid", season.getName(), season.getSeasonNumber()));
         }
@@ -251,19 +293,6 @@ public class MainService {
                     case 2014:
                         return new Season(countryName, seasonNumber, 4484);
                 }
-            case "jupiler-league": // belgium
-                switch (seasonNumber) {
-                    case 2018:
-                        return new Season(countryName, seasonNumber, 6931);
-                    case 2017:
-                        return new Season(countryName, seasonNumber, 6336);
-                    case 2016:
-                        return new Season(countryName, seasonNumber, 5608);
-                    case 2015:
-                        return new Season(countryName, seasonNumber, 5000);
-                    case 2014:
-                        return new Season(countryName, seasonNumber, 4448);
-                }
             case "upl": // ukraine
                 switch (seasonNumber) {
                     case 2018:
@@ -302,6 +331,19 @@ public class MainService {
                         return new Season(countryName, seasonNumber, 4953);
                     case 2014:
                         return new Season(countryName, seasonNumber, 4384);
+                }
+            case "jupiler-league": // belgium
+                switch (seasonNumber) {
+                    case 2018:
+                        return new Season(countryName, seasonNumber, 6931);
+                    case 2017:
+                        return new Season(countryName, seasonNumber, 6336);
+                    case 2016:
+                        return new Season(countryName, seasonNumber, 5608);
+                    case 2015:
+                        return new Season(countryName, seasonNumber, 5000);
+                    case 2014:
+                        return new Season(countryName, seasonNumber, 4448);
                 }
             case "argentina-primera-division": // argentina
                 switch (seasonNumber) {
