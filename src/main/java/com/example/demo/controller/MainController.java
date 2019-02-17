@@ -11,6 +11,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -36,14 +37,15 @@ public class MainController {
     }
 
     @GetMapping("/season/{countryName}/{seasonNumber}")
-    public ModelAndView season(@PathVariable("countryName") String countryName, @PathVariable("seasonNumber") Integer seasonNumber) throws CloneNotSupportedException {
+    public ModelAndView season(@PathVariable("countryName") String countryName,
+                               @PathVariable("seasonNumber") Integer seasonNumber,
+                               @RequestParam(value = "teamStrategy", required = false, defaultValue = "2") Integer teamStrategy) throws CloneNotSupportedException {
         ModelAndView modelAndView = new ModelAndView("season");
         Season season = mainService.parseSeason(countryName, seasonNumber);
-        List<Balance> balances = bettingStrategyService.prepareBalance(season, BettingStrategyType.CLASSIC_WITH_3_TEAMS);
+        List<Balance> balances = bettingStrategyService.prepareBalance(season, BettingStrategyType.of(teamStrategy));
 
         modelAndView.addObject("season", season);
         modelAndView.addObject("balance", balances);
-//        modelAndView.addObject("info", String.format("%s season %s; Start balance - %s; End balance - "));
 
         return modelAndView;
     }

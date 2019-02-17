@@ -38,7 +38,7 @@ public class GlobalStatisticsTest {
         for (String country : countries) {
             for (int i = 2010; i <= 2018; i++) {
                 try {
-                    seasons.add(bettingStrategyService.prepareStatistics(mainService.parseSeason(country, i)));
+//                    seasons.add(bettingStrategyService.prepareStatistics(mainService.parseSeason(country, i)));
                 } catch (Exception e) {
                     System.out.println();
                 }
