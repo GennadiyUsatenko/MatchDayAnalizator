@@ -82,10 +82,8 @@ public class MainService {
         if (countryName.equals("jupiler-league")) {
             matchesForBelgium = matchesForBelgium.stream()
                     .sorted((m1, m2) -> {
-                        String[] arr1 = m1.getDate().split("\\|")[0].trim().split("\\.");
-                        String[] arr2 = m2.getDate().split("\\|")[0].trim().split("\\.");
-                        return  OffsetDateTime.of(LocalDate.parse(String.format("%s-%s-%s", arr1[2], arr1[1], arr1[0])), LocalTime.NOON, ZoneOffset.UTC).compareTo(
-                                OffsetDateTime.of(LocalDate.parse(String.format("%s-%s-%s", arr2[2], arr2[1], arr2[0])), LocalTime.NOON, ZoneOffset.UTC));
+                        return  LocalDate.parse(m1.getDate().split("\\|")[0], DateTimeFormatter.ofPattern("dd.MM.yyyy")).atStartOfDay().atOffset(ZoneOffset.UTC).compareTo(
+                                LocalDate.parse(m2.getDate().split("\\|")[0], DateTimeFormatter.ofPattern("dd.MM.yyyy")).atStartOfDay().atOffset(ZoneOffset.UTC));
                     }).collect(Collectors.toList());
 
             for (int i = 1; i <= 30; i++) {
