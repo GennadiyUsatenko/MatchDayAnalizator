@@ -63,7 +63,7 @@ public class MainService {
                         String date = match.select("td.name-td").text();
                         Team homeTeam = season.findTeamByName(match.select("td.owner-td").text());
                         Team guestTeam = season.findTeamByName(match.select("td.guests-td").text());
-                        int[] goals = Stream.of(match.select("td.score-td").text().split(":")).filter(s -> s.matches(".*\\d+.*")).mapToInt(s -> Integer.parseInt(s.trim())).toArray();
+                        int[] goals = Stream.of(match.select("td.score-td").text().split(":")).filter(s -> s.matches(".*\\d+.*")).mapToInt(s -> Integer.parseInt(s.replaceAll("\\D", "").trim())).toArray();
 
                         if (goals.length > 0) {
                             boolean isScored = goals[0] > 0 && goals[1] > 0;
