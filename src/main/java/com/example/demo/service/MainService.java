@@ -252,6 +252,14 @@ public class MainService {
                         return new Season(countryName, seasonNumber, 4957);
                     case 2014:
                         return new Season(countryName, seasonNumber, 4392);
+                    case 2013:
+                        return new Season(countryName, seasonNumber, 3263);
+                    case 2012:
+                        return new Season(countryName, seasonNumber, 2024);
+                    case 2011:
+                        return new Season(countryName, seasonNumber, 1283);
+                    case 2010:
+                        return new Season(countryName, seasonNumber, 571);
                 }
             case "eredivisie":
                 switch (seasonNumber) {
@@ -265,6 +273,14 @@ public class MainService {
                         return new Season(countryName, seasonNumber, 4981);
                     case 2014:
                         return new Season(countryName, seasonNumber, 4462);
+                    case 2013:
+                        return new Season(countryName, seasonNumber, 3301);
+                    case 2012:
+                        return new Season(countryName, seasonNumber, 1957);
+                    case 2011:
+                        return new Season(countryName, seasonNumber, 1266);
+                    case 2010:
+                        return new Season(countryName, seasonNumber, 565);
                 }
             case "liga-zon-sagres": // portugal
                 switch (seasonNumber) {
@@ -278,6 +294,14 @@ public class MainService {
                         return new Season(countryName, seasonNumber, 5042);
                     case 2014:
                         return new Season(countryName, seasonNumber, 4410);
+                    case 2013:
+                        return new Season(countryName, seasonNumber, 3288);
+                    case 2012:
+                        return new Season(countryName, seasonNumber, 1987);
+                    case 2011:
+                        return new Season(countryName, seasonNumber, 1337);
+                    case 2010:
+                        return new Season(countryName, seasonNumber, 645);
                 }
             case "super-lig": // turkey
                 switch (seasonNumber) {
@@ -291,6 +315,56 @@ public class MainService {
                         return new Season(countryName, seasonNumber, 5054);
                     case 2014:
                         return new Season(countryName, seasonNumber, 4484);
+                    case 2013:
+                        return new Season(countryName, seasonNumber, 3261);
+                    case 2012:
+                        return new Season(countryName, seasonNumber, 2016);
+                    case 2011:
+                        return new Season(countryName, seasonNumber, 1390);
+                    case 2010:
+                        return new Season(countryName, seasonNumber, 681);
+                }
+            case "championship": // championship
+                switch (seasonNumber) {
+                    case 2018:
+                        return new Season(countryName, seasonNumber, 6883);
+                    case 2017:
+                        return new Season(countryName, seasonNumber, 6309);
+                    case 2016:
+                        return new Season(countryName, seasonNumber, 5548);
+                    case 2015:
+                        return new Season(countryName, seasonNumber, 4953);
+                    case 2014:
+                        return new Season(countryName, seasonNumber, 4384);
+                    case 2013:
+                        return new Season(countryName, seasonNumber, 3269);
+                    case 2012:
+                        return new Season(countryName, seasonNumber, 1848);
+                    case 2011:
+                        return new Season(countryName, seasonNumber, 1244);
+                    case 2010:
+                        return new Season(countryName, seasonNumber, 583);
+                }
+            case "jupiler-league": // belgium
+                switch (seasonNumber) {
+                    case 2018:
+                        return new Season(countryName, seasonNumber, 6931);
+                    case 2017:
+                        return new Season(countryName, seasonNumber, 6336);
+                    case 2016:
+                        return new Season(countryName, seasonNumber, 5608);
+                    case 2015:
+                        return new Season(countryName, seasonNumber, 5000);
+                    case 2014:
+                        return new Season(countryName, seasonNumber, 4448);
+                    case 2013:
+                        return new Season(countryName, seasonNumber, 3290);
+                    case 2012:
+                        return new Season(countryName, seasonNumber, 1947);
+                    case 2011:
+                        return new Season(countryName, seasonNumber, 1260);
+                    case 2010:
+                        return new Season(countryName, seasonNumber, 582);
                 }
             case "upl": // ukraine
                 switch (seasonNumber) {
@@ -317,32 +391,6 @@ public class MainService {
                         return new Season(countryName, seasonNumber, 4959);
                     case 2014:
                         return new Season(countryName, seasonNumber, 4385);
-                }
-            case "championship": // championship
-                switch (seasonNumber) {
-                    case 2018:
-                        return new Season(countryName, seasonNumber, 6883);
-                    case 2017:
-                        return new Season(countryName, seasonNumber, 6309);
-                    case 2016:
-                        return new Season(countryName, seasonNumber, 5548);
-                    case 2015:
-                        return new Season(countryName, seasonNumber, 4953);
-                    case 2014:
-                        return new Season(countryName, seasonNumber, 4384);
-                }
-            case "jupiler-league": // belgium
-                switch (seasonNumber) {
-                    case 2018:
-                        return new Season(countryName, seasonNumber, 6931);
-                    case 2017:
-                        return new Season(countryName, seasonNumber, 6336);
-                    case 2016:
-                        return new Season(countryName, seasonNumber, 5608);
-                    case 2015:
-                        return new Season(countryName, seasonNumber, 5000);
-                    case 2014:
-                        return new Season(countryName, seasonNumber, 4448);
                 }
             case "argentina-primera-division": // argentina
                 switch (seasonNumber) {
