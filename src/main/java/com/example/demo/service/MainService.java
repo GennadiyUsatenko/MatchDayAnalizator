@@ -57,8 +57,9 @@ public class MainService {
 
 
                 Iterator<Integer> matchDayNumbers = document.select("h3.titleH3").stream().filter(e -> e.text().contains("тур")).map(e -> Integer.parseInt(e.text().replaceAll("\\D", ""))).collect(Collectors.toList()).iterator();
-                List<MatchDay> matchDays = document.select("table.stat-table tbody").stream().limit(document.select("h3.titleH3").stream().filter(e -> e.text().contains("тур")).count()).map(matchDay -> {
-                    List<Match> matches = matchDay.select("tr").stream().map(match -> {
+
+                List<MatchDay> matchDays = document.select("h3.titleH3").stream().filter(e -> e.text().contains("тур")).map(matchDay -> {
+                    List<Match> matches = matchDay.nextElementSibling().select("table.stat-table tbody tr").stream().map(match -> {
                         String date = match.select("td.name-td").text();
                         Team homeTeam = season.findTeamByName(match.select("td.owner-td").text());
                         Team guestTeam = season.findTeamByName(match.select("td.guests-td").text());

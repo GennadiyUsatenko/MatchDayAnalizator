@@ -11,6 +11,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import static com.example.demo.utils.CommonUtils.*;
+
 @Getter
 @Setter
 @Accessors(chain = true)
@@ -46,8 +48,8 @@ public class Season {
     private Double averageGoalForGuestSide;
 
     public void setAverageGoals() {
-        averageGoalForHomeSide = matchDays.stream().filter(matchDay -> !matchDay.isInFuture()).mapToDouble(MatchDay::getAverageGoalForHomeSide).summaryStatistics().getAverage();
-        averageGoalForGuestSide = matchDays.stream().filter(matchDay -> !matchDay.isInFuture()).mapToDouble(MatchDay::getAverageGoalForGuestSide).summaryStatistics().getAverage();
+        averageGoalForHomeSide = roundingWithBigDecimal(matchDays.stream().filter(matchDay -> !matchDay.isInFuture()).mapToDouble(MatchDay::getAverageGoalForHomeSide).summaryStatistics().getAverage());
+        averageGoalForGuestSide = roundingWithBigDecimal(matchDays.stream().filter(matchDay -> !matchDay.isInFuture()).mapToDouble(MatchDay::getAverageGoalForGuestSide).summaryStatistics().getAverage());
     }
 
     public boolean isValid() {

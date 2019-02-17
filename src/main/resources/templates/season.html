@@ -8,11 +8,12 @@
 
 </head>
 <body>
-<h1 class="display-3 text-uppercase" th:text="${season.name} + ' - ' + ${season.seasonNumber}"></h1>
-<h1 class="display-4" th:text="'Average Goal For Home Side: ' + ${season.averageGoalForHomeSide}"></h1>
-<h1 class="display-4" th:text="'Average Goal For Guest Side: ' + ${season.averageGoalForGuestSide}"></h1>
-<h1 class="display-4" th:text="'Start balance: ' + ${balance[#lists.size(balance) - 1].startBalance} + ' $'"></h1>
-<h1 class="display-4" th:text="'Current balance: ' + ${balance[#lists.size(balance) - 1].currentBalance} + ' $'"></h1>
+<h1 class="display-1 text-uppercase" th:text="${season.name} + ' - ' + ${season.seasonNumber}"></h1>
+<h1 th:text="'Average Goal For Home Side: ' + ${season.averageGoalForHomeSide}"></h1>
+<h1 th:text="'Average Goal For Guest Side: ' + ${season.averageGoalForGuestSide}"></h1>
+<h1 th:text="'Start balance: ' + ${balance[#lists.size(balance) - 1].startBalance} + ' $'"></h1>
+<h1 th:text="'Current balance: ' + ${balance[#lists.size(balance) - 1].currentBalance} + ' $'"
+    th:class="${balance[#lists.size(balance) - 1].currentBalance > 10} ? 'table-success' : 'table-danger'"></h1>
 
 <th:block th:each="matchDay, matchDayIter : ${season.matchDays}">
     <hr style="border: 10px solid green;"/>
