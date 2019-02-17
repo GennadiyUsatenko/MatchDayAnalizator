@@ -28,7 +28,7 @@ public class BettingStrategyService {
         prepareStatistics(season, strategyType);
 
         for (MatchDay matchDay: season.getMatchDays().stream().skip(1).collect(Collectors.toList())) {
-            if (matchDay.getMatches().stream().anyMatch(Match::isPotentiallyScored)) {
+            if (matchDay.getMatches().stream().anyMatch(Match::isPotentiallyScored) && matchDay.getMatches().stream().filter(Match::isPotentiallyScored).noneMatch(Match::isInFuture)) {
                 if (matchDay.getMatches().stream().filter(Match::isPotentiallyScored).allMatch(Match::isScored)) {
                     balances.add(balances.get(balances.size() - 1).clone().goodBet(matchDay.getMatches().stream().filter(Match::isPotentiallyScored).count(), DEFAULT_COEFFICIENT));
                 } else {
