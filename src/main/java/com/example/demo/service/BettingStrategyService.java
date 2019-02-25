@@ -22,9 +22,9 @@ public class BettingStrategyService {
     private static final Double DEFAULT_COEFFICIENT = 1.6;
     private static final BettingStrategyType DEFAULT_STATEGY_TYPE = CLASSIC_WITH_3_TEAMS;
 
-    public List<Balance> prepareBalance(Season season, BettingStrategyType strategyType, Boolean isUseByGoalStat) throws CloneNotSupportedException {
+    public List<Balance> prepareBalance(Season season, BettingStrategyType strategyType, Boolean isUseByGoalStat, Integer strick) throws CloneNotSupportedException {
         List<Balance> balances = new ArrayList<>(season.getMatchDays().size());
-        balances.add(new Balance(10d));
+        balances.add(new Balance(10d, strick));
         if (!isUseByGoalStat) {
             prepareStatistics(season, strategyType);
         } else {
@@ -36,7 +36,7 @@ public class BettingStrategyService {
                 if (matchDay.getMatches().stream().filter(Match::isPotentiallyScored).allMatch(Match::isScored)) {
                     balances.add(balances.get(balances.size() - 1).clone().goodBet(matchDay.getMatches().stream().filter(Match::isPotentiallyScored).count(), DEFAULT_COEFFICIENT));
                 } else {
-                    balances.add(balances.get(balances.size() - 1).clone().poorBet());
+                    balances.add(balances.get(balances.size() - 1).clone().poorBet(matchDay.getMatches().stream().filter(Match::isPotentiallyScored).count(), DEFAULT_COEFFICIENT));
                 }
             } else {
                 balances.add(balances.get(balances.size() - 1).clone());

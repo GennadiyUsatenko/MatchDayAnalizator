@@ -40,10 +40,11 @@ public class MainController {
     public ModelAndView season(@PathVariable("countryName") String countryName,
                                @PathVariable("seasonNumber") Integer seasonNumber,
                                @RequestParam(value = "byGoal", required = false, defaultValue = "false") Boolean isUseByGoalStat,
+                               @RequestParam(value = "strick", required = false, defaultValue = "1") Integer strick,
                                @RequestParam(value = "teamStrategy", required = false, defaultValue = "2") Integer teamStrategy) throws CloneNotSupportedException {
         ModelAndView modelAndView = new ModelAndView("season");
         Season season = mainService.parseSeason(countryName, seasonNumber);
-        List<Balance> balances = bettingStrategyService.prepareBalance(season, BettingStrategyType.of(teamStrategy), isUseByGoalStat);
+        List<Balance> balances = bettingStrategyService.prepareBalance(season, BettingStrategyType.of(teamStrategy), isUseByGoalStat, strick);
 
         modelAndView.addObject("season", season);
         modelAndView.addObject("balance", balances);

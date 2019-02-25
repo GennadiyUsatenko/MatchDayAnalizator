@@ -10,6 +10,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 
 import static com.example.demo.utils.CommonUtils.*;
+import static java.lang.Math.pow;
 
 @Getter
 @Setter
@@ -23,11 +24,21 @@ public class Balance implements Cloneable {
         this.currentBalance = startBalance;
     }
 
+    public Balance(Double startBalance, int strick) {
+        this.startBalance = startBalance;
+        this.currentBalance = startBalance;
+        this.strick = strick;
+    }
+
     private Double startBalance = 0d;
 
     private Double currentBalance = 0d;
 
     private Double profit = 0d;
+
+    private int strick;
+
+    private int currentStrick;
 
     @Override
     public Balance clone() throws CloneNotSupportedException {
@@ -35,17 +46,36 @@ public class Balance implements Cloneable {
     }
 
     public Balance goodBet(long teamSize, double coefficient) {
-        currentBalance += startBalance * Math.pow(coefficient, teamSize);
+        if (strick < 1) {
+            currentBalance += startBalance * pow(coefficient, teamSize) - startBalance;
+        } else {
+            incrementCurrentStrick();
+            currentBalance += startBalance * pow(pow(coefficient, teamSize), currentStrick) - (startBalance * pow(pow(coefficient, teamSize), currentStrick - 1));
+        }
         profit = currentBalance - startBalance;
         makeRoundingWithBigDecimal();
         return this;
     }
 
-    public Balance poorBet() {
-        currentBalance -= startBalance;
+    public Balance poorBet(long teamSize, double coefficient) {
+        if (strick < 1) {
+            currentBalance -= startBalance;
+        } else {
+            decrementCurrentStrick();
+            currentBalance -= startBalance * pow(pow(coefficient, teamSize), currentStrick);
+            currentStrick = 0;
+        }
         profit = currentBalance - startBalance;
         makeRoundingWithBigDecimal();
         return this;
+    }
+
+    private void incrementCurrentStrick() {
+        currentStrick = ++currentStrick > strick ? 1 : currentStrick;
+    }
+
+    private void decrementCurrentStrick() {
+        currentStrick = currentStrick == strick ? 0 : currentStrick;
     }
 
     private void makeRoundingWithBigDecimal() {
