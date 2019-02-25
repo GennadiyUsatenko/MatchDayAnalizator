@@ -22,10 +22,14 @@ public class BettingStrategyService {
     private static final Double DEFAULT_COEFFICIENT = 1.6;
     private static final BettingStrategyType DEFAULT_STATEGY_TYPE = CLASSIC_WITH_3_TEAMS;
 
-    public List<Balance> prepareBalance(Season season, BettingStrategyType strategyType) throws CloneNotSupportedException {
+    public List<Balance> prepareBalance(Season season, BettingStrategyType strategyType, Boolean isUseByGoalStat) throws CloneNotSupportedException {
         List<Balance> balances = new ArrayList<>(season.getMatchDays().size());
         balances.add(new Balance(10d));
-        prepareStatistics(season, strategyType);
+        if (!isUseByGoalStat) {
+            prepareStatistics(season, strategyType);
+        } else {
+            prepareStatisticsByGoals(season, strategyType);
+        }
 
         for (MatchDay matchDay: season.getMatchDays().stream().skip(1).collect(Collectors.toList())) {
             if (matchDay.getMatches().stream().anyMatch(Match::isPotentiallyScored) && matchDay.getMatches().stream().filter(Match::isPotentiallyScored).noneMatch(Match::isInFuture)) {
@@ -64,6 +68,35 @@ public class BettingStrategyService {
                 match.setPossibleScoredPercent(tableStatisticsMap.get(match.getHomeTeam()).getPossibleDoubleScoredPercent() * tableStatisticsMap.get(match.getGuestTeam()).getPossibleDoubleScoredPercent());
             });
             season.getMatchDays().get(matchDayNumber.get()).getMatches().stream().sorted(Comparator.comparingDouble(Match::getPossibleScoredPercent).reversed()).limit(teamStrategy).forEach(match -> {
+                match.setPotentiallyScored(true);
+            });
+        }
+        return season;
+    }
+
+    public Season prepareStatisticsByGoals(Season season, BettingStrategyType strategyType) {
+        int teamStrategy = 2;
+        switch (strategyType) {
+            case CLASSIC_WITH_2_TEAMS:
+                teamStrategy = 2;
+                break;
+            case CLASSIC_WITH_3_TEAMS:
+                teamStrategy = 3;
+                break;
+            case CLASSIC_WITH_4_TEAMS:
+                teamStrategy = 4;
+                break;
+            case CLASSIC_WITH_5_TEAMS:
+                teamStrategy = 5;
+                break;
+        }
+
+        for (AtomicInteger matchDayNumber = new AtomicInteger(PREPARE_STATISTICS_MATCH_DAY_LIMIT); matchDayNumber.get() < season.getMatchDays().size(); matchDayNumber.incrementAndGet()) {
+            Map<Team, TableStatistics> tableStatisticsMap = season.getTableStatList(matchDayNumber.get(), null).stream().collect(Collectors.toMap(TableStatistics::getTeam, t -> t));
+            season.getMatchDays().get(matchDayNumber.get()).getMatches().forEach(match -> {
+                match.setMinimalGoalIndicator(tableStatisticsMap.get(match.getHomeTeam()).getMinimalGoalIndicator() + tableStatisticsMap.get(match.getGuestTeam()).getMinimalGoalIndicator());
+            });
+            season.getMatchDays().get(matchDayNumber.get()).getMatches().stream().sorted(Comparator.comparingInt(Match::getMinimalGoalIndicator).reversed()).limit(teamStrategy).forEach(match -> {
                 match.setPotentiallyScored(true);
             });
         }
